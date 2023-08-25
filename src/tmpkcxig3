@@ -1,5 +1,0 @@
-use cursi
-
-fn main() {
-    println!("Hello, world!");
-}

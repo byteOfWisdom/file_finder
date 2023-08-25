@@ -1,5 +1,0 @@
-use c
-
-fn main() {
-    println!("Hello, world!");
-}

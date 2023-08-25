@@ -1,8 +1,0 @@
-use cursive;
-
-fn main() {
-    println!("Hello, world!");
-}
-
-
-s

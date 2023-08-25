@@ -1,7 +1,0 @@
-use std::env::{argv};
-u
-
-
-fn main() {
-    println!("Hello, world!");
-}
