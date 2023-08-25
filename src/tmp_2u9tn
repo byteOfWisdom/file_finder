@@ -1,0 +1,34 @@
+use cursive;
+use cursive::CursiveExt;
+use cursive::views::{TextArea, SelectView, LinearLayout, };
+use cursive::traits::{Nameable, Resizable};
+
+fn main() {
+	let _ = build_interface();
+}
+
+
+fn build_interface() -> cursive::Cursive{
+	let mut interface = cursive::Cursive::default();
+
+	//quit callback
+	interface.add_global_callback(cursive::event::Key::Esc, |s| s.quit());
+
+
+	let text = TextArea::new()
+		.content("default content")
+		.with_name("search request")
+		.min_height(5);
+
+	let select = SelectView::<String>::new();
+
+	let app_layout = LinearLayout::vertical()
+		.child(text)
+		.child(select);
+
+
+	interface.add_layer(app_layout);
+
+	interface.run();
+	return interface;
+}

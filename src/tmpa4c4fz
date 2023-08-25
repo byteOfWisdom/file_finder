@@ -1,0 +1,25 @@
+use cursive;
+use cursive::CursiveExt;
+use cursive::views::{TextArea};
+use cursive::traits::{Nameable }
+
+fn main() {
+	let _ = build_interface();
+}
+
+
+fn build_interface() -> cursive::Cursive{
+	let mut interface = cursive::Cursive::default();
+
+	//quit callback
+	interface.add_global_callback(cursive::event::Key::Esc, |s| s.quit());
+
+	interface.add_layer(TextArea::new()
+		.content("default content")
+		.with_name("search request")
+		.min_height(5)
+	);
+
+	interface.run();
+	return interface;
+}

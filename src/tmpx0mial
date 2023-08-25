@@ -1,0 +1,14 @@
+use cursive;
+
+fn main() {
+    println!("Hello, world!");
+}
+
+
+#[derive(Debug)]
+struct Interface {
+}
+
+impl Interface {
+	pub fn 
+}

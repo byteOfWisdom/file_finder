@@ -1,0 +1,10 @@
+use cursive;
+
+fn main() {
+    println!("Hello, world!");
+}
+
+
+fn build_interface() -> cursive::Cursive{
+	let m
+}

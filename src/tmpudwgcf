@@ -1,0 +1,12 @@
+use cursive;
+
+fn main() {
+	b
+}
+
+
+fn build_interface() -> cursive::Cursive{
+	let mut interface = cursive::default();
+
+	return interface;
+}

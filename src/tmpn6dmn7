@@ -1,0 +1,19 @@
+use cursive;
+
+fn main() {
+    println!("Hello, world!");
+}
+
+
+#[derive(Debug)]
+struct Interface {
+	serch_input : S
+}
+
+impl Interface {
+	pub fn default() -> Self {
+		Interface {
+
+		}
+	}
+}

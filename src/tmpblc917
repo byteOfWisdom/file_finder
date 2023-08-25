@@ -1,0 +1,15 @@
+use cursive;
+
+fn main() {
+	let mut interface = build_interface();
+	i
+}
+
+
+fn build_interface() -> cursive::Cursive{
+	let mut interface = cursive::Cursive::default();
+
+	interface.add_global_callback('q', |s| s.quit());
+
+	return interface;
+}

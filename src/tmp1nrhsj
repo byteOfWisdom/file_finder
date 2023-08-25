@@ -1,0 +1,14 @@
+use cursive;
+
+fn main() {
+	build_interface();
+}
+
+
+fn build_interface() -> cursive::Cursive{
+	let mut interface = cursive::Cursive::default();
+
+	interface.add_global_cal
+
+	return interface;
+}

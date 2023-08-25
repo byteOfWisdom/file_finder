@@ -1,0 +1,6 @@
+import std::env::{arg}
+
+
+fn main() {
+    println!("Hello, world!");
+}

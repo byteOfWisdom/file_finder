@@ -1,0 +1,6 @@
+import s
+
+
+fn main() {
+    println!("Hello, world!");
+}
