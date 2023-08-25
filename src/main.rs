@@ -3,36 +3,11 @@ use cursive::CursiveExt;
 use cursive::views::{SelectView, LinearLayout, Dialog, EditView};
 use cursive::traits::{Nameable, Resizable};
 
+mod search;
+use search::SearchState;
+
 fn main() {
-	let _ = build_interface();
-}
-
-
-#[derive(Debug)]
-struct SearchState {
-	request : String,
-	results : Vec<String>,
-}
-
-
-impl SearchState {
-	pub fn new() -> Self {
-		return SearchState {
-			request : String::new(),
-			results : Vec::new(),
-		}
-	}
-
-	pub fn update_request(&mut self, new_request : String) {
-		self.request = new_request.clone();
-		self.results = vec!{String::from("dummy"), String::from("test")};
-		self.results.push(new_request);
-	}
-
-	pub fn get_results(&self) -> Vec<String> {
-		return self.results.clone();
-	}
-
+	build_interface();
 }
 
 
@@ -56,7 +31,7 @@ fn update_search(s : &mut cursive::Cursive, search : &str, _len : usize) {
 }
 
 
-fn build_interface() -> cursive::Cursive{
+fn build_interface() {
 	let mut interface = cursive::Cursive::default();
 
 	interface.set_user_data(SearchState::new());
@@ -70,7 +45,8 @@ fn build_interface() -> cursive::Cursive{
 			.with_name("search string")
 		)
 		.title("search string")
-		.fixed_width(80);
+		.fixed_width(80)
+		.fixed_height(3);
 
 	let select = SelectView::<String>::new()
 		.with_name("results");
@@ -83,5 +59,4 @@ fn build_interface() -> cursive::Cursive{
 	interface.add_layer(app_layout);
 
 	interface.run();
-	return interface;
 }
