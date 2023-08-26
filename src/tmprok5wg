@@ -1,0 +1,88 @@
+use std::fs;
+use std::path::PathBuf;
+use std::io;
+
+//use serde::{Deserialize, Serialize};
+
+#[derive(Debug)]
+pub struct SearchState {
+	request : String,
+	results : Vec<String>,
+	files : Vec<fs::DirEntry>,
+	config : SearchConfig,
+}
+
+
+impl SearchState {
+	pub fn new() -> Self {
+		return SearchState {
+			request : String::new(),
+			results : Vec::new(),
+			files : Vec::new(),
+			config : SearchConfig::default(),
+		}
+	}
+
+	pub fn update_request(&mut self, new_request : String) {
+		self.request = new_request.clone();
+		self.results = vec!{String::from("dummy"), String::from("test")};
+		let _ = self.search();
+	}
+
+	pub fn get_results(&self) -> Vec<String> {
+		return self.results.clone();
+	}
+
+	fn get_files(&mut self, root : &str, depth : usize) -> Result<(), io::Error> {
+		let mut search_loactions : Vec<PathBuf> = vec![PathBuf::from(root)];
+
+		//should I even clear the file buffer?
+		self.files = Vec::new();
+
+		let mut i = 0;
+
+		while i < search_loactions.len() {
+
+			let ls = fs::read_dir(&search_loactions[i])?;
+			for file in ls {
+				let file = file?;
+
+				if file.path().is_dir() {
+					search_loactions.push(file.path());
+				} else {
+					self.files.push(file);
+				}
+			}
+			i += 1;
+		}
+
+		Ok(())
+	}
+
+
+	fn search(&mut self) -> Result<(), io::Error> {
+		for file in files.iter() {
+			self.results.push(file.file_);
+		}
+		Ok(())
+	}
+
+
+}
+
+
+#[derive(Debug)]
+struct SearchConfig {
+	pub search_roots : Vec<String>,
+	pub max_depth : usize,
+}
+
+
+impl SearchConfig {
+	pub fn default() -> Self {
+		SearchConfig {
+			search_roots : vec!["~/".to_string(), "./".to_string()],
+			max_depth : 5,
+		}
+	}
+}
