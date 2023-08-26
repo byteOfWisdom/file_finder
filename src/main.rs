@@ -1,17 +1,26 @@
 use cursive;
 use cursive::CursiveExt;
-use cursive::views::{SelectView, LinearLayout, Dialog, EditView};
+use cursive::views::{SelectView, LinearLayout, Dialog, EditView, TextView, ViewRef, ScrollView};
 use cursive::traits::{Nameable, Resizable};
 
 mod search;
 use search::SearchState;
 
+use std::env;
+
 fn main() {
-	build_interface();
+	let mut base_path = String::from(".");
+
+	let argv = env::args().collect::<Vec<String>>();
+	if argv.len() > 1 {
+		base_path = argv[1].clone();
+	}
+
+	run_interface(&base_path);
 }
 
 
-fn update_search(s : &mut cursive::Cursive, search : &str, _len : usize) {
+fn update_search(s : &mut cursive::Cursive, search : &str) {
 	let search_state : &mut SearchState = s.user_data().unwrap();
 	//run search on the current request (maybe think of a smart way to only look for the diffs)
 
@@ -19,6 +28,7 @@ fn update_search(s : &mut cursive::Cursive, search : &str, _len : usize) {
 
 	//display the results
 	let results = search_state.get_results();
+	let fc = search_state.get_file_count();
 
 	//TODO: make this more elegant and maybe more performant
 	s.call_on_name("results", |view : &mut SelectView<String>| {
@@ -28,20 +38,25 @@ fn update_search(s : &mut cursive::Cursive, search : &str, _len : usize) {
 		}
 	});
 
+	let mc = results.len();
+	//update the debug info
+	let text = format!("found {} files, {} of which match the search", fc, mc);
+	let mut text_view : ViewRef<TextView> = s.find_name("info").unwrap();
+	text_view.set_content(text);
 }
 
 
-fn build_interface() {
+fn run_interface(origin : &str) {
 	let mut interface = cursive::Cursive::default();
 
-	interface.set_user_data(SearchState::new());
+	interface.set_user_data(SearchState::new(origin));
 
 	//quit callback
 	interface.add_global_callback(cursive::event::Key::Esc, |s| s.quit());
 
 	let input = Dialog::around(
 			EditView::new()
-			.on_edit(update_search)
+			.on_submit(update_search)
 			.with_name("search string")
 		)
 		.title("search string")
@@ -51,9 +66,14 @@ fn build_interface() {
 	let select = SelectView::<String>::new()
 		.with_name("results");
 
+	let info = TextView::new("info")
+		.with_name("info");
+
+
 	let app_layout = LinearLayout::vertical()
 		.child(input)
-		.child(select);
+		.child(info)
+		.child(ScrollView::new(select));
 
 
 	interface.add_layer(app_layout);
