@@ -3,6 +3,8 @@ use cursive::CursiveExt;
 use cursive::views::{SelectView, LinearLayout, Dialog, EditView, TextView, ViewRef, ScrollView};
 use cursive::traits::{Nameable, Resizable};
 
+use cli_clipboard;
+
 mod search;
 use search::SearchState;
 
@@ -64,6 +66,7 @@ fn run_interface(origin : &str) {
 		.fixed_height(3);
 
 	let select = SelectView::<String>::new()
+		.on_submit(handle_selection)
 		.with_name("results");
 
 	let info = TextView::new("info")
@@ -79,4 +82,11 @@ fn run_interface(origin : &str) {
 	interface.add_layer(app_layout);
 
 	interface.run();
+}
+
+fn handle_selection(s : &mut cursive::Cursive, entry : &str) {
+	//for now, just copy the string to clipboard and quit.
+	//TODO: change this behaviour to multiple options on what to do
+	cli_clipboard::set_contents(String::from(entry).to_owned()).unwrap();
+	s.quit();
 }
