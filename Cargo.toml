@@ -11,4 +11,4 @@ cursive = "*"
 [dependencies.regex]
 version = "1.9"
 default-features = false
-features = ["perf"]
+features = ["perf-dfa-full"]

@@ -56,9 +56,9 @@ impl SearchState {
 				let file = file?;
 
 				if file.path().is_dir() {
-					search_loactions.push(file.path().clone());
+					search_loactions.push( file.path().clone() );
 				} else {
-					self.files.push(file.path());
+					self.files.push( file.path() );
 				}
 			}
 			i += 1;
@@ -75,14 +75,14 @@ impl SearchState {
 
 		self.results = Vec::new();
 
-		let search_exp = regex::Regex::new(&self.request).unwrap();
+		let search_exp = regex_from_wildcards(&self.request);
 
 		self.files.iter()
 			.filter(|file| {
 				let name_string = pathbuf_to_string(&file);
 				search_exp.is_match(&name_string)
 			})
-			.for_each(|file| self.results.push(file.clone().into_os_string().into_string().unwrap()));
+			.for_each(|file| self.results.push( pathbuf_to_string(&file)) );
 
 		Ok(())
 	}
@@ -92,4 +92,13 @@ impl SearchState {
 fn pathbuf_to_string(pb : &PathBuf) -> String {
 	let os_string = pb.clone().into_os_string();
 	return os_string.into_string().unwrap();
+}
+
+
+fn regex_from_wildcards(string : &str) -> regex::Regex {
+
+	let mut regexed_string = str::replace(string, ".", "\\.");
+	regexed_string = str::replace(&regexed_string, "*", ".*");
+
+	return regex::Regex::new(&regexed_string).unwrap();
 }
