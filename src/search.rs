@@ -44,7 +44,6 @@ impl SearchState {
 	fn get_files(&mut self) -> Result<(), io::Error> {
 		let mut search_loactions : Vec<PathBuf> = vec![self.origin.clone()];
 
-		//should I even clear the file buffer?
 		self.files = Vec::new();
 
 		let mut i = 0;
@@ -99,6 +98,7 @@ fn regex_from_wildcards(string : &str) -> regex::Regex {
 
 	let mut regexed_string = str::replace(string, ".", "\\.");
 	regexed_string = str::replace(&regexed_string, "*", ".*");
+	regexed_string = str::replace(&regexed_string, "?", ".");
 
 	return regex::Regex::new(&regexed_string).unwrap();
 }
