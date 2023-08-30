@@ -15,6 +15,13 @@ fn main() {
 
 	let argv = env::args().collect::<Vec<String>>();
 	if argv.len() > 1 {
+		if argv[1].contains(&String::from("-h")) | argv.contains(&String::from("--help")) {
+			println!("usage: file_finder [PATH]");
+			println!("where PATH is the base for where to start the search from");
+			return;
+		}
+
+
 		base_path = argv[1].clone();
 	}
 
