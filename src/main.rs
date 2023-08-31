@@ -58,6 +58,7 @@ fn update_search(s : &mut cursive::Cursive, search : &str) {
 fn run_interface(origin : &str) {
 	let mut interface = cursive::Cursive::default();
 
+	interface.load_toml(include_str!("theme.toml")).unwrap();
 	interface.set_user_data(SearchState::new(origin));
 
 	//quit callback
