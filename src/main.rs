@@ -1,6 +1,10 @@
 use cursive;
 use cursive::CursiveExt;
-use cursive::views::{SelectView, LinearLayout, Dialog, EditView, TextView, ViewRef, ScrollView};
+use cursive::views::{
+	SelectView, 
+	LinearLayout, 
+	Dialog, 
+	EditView, TextView, ViewRef, ScrollView};
 use cursive::traits::{Nameable, Resizable};
 
 use cli_clipboard;
@@ -95,6 +99,14 @@ fn run_interface(origin : &str) {
 fn handle_selection(s : &mut cursive::Cursive, entry : &str) {
 	//for now, just copy the string to clipboard and quit.
 	//TODO: change this behaviour to multiple options on what to do
-	cli_clipboard::set_contents(String::from(entry).to_owned()).unwrap();
+
+	//TODO: insert \ and stuff into copy string so that pasting into terminal works
+	//TODO: that has to be os specific cause windows uses a differnt escape char (i assume???)
+	cli_clipboard::set_contents(to_pastable_path(entry).to_owned()).unwrap();
 	s.quit();
+}
+
+
+fn to_pastable_path(path : &str) -> String {
+	return String::from(path.replace(' ', "\\ "));
 }
