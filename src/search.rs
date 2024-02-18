@@ -44,28 +44,7 @@ impl SearchState {
 
 
 	fn get_files(&mut self) -> Result<(), io::Error> {
-		//let mut search_loactions : Vec<PathBuf> = vec![self.origin.clone()];
 		self.files = get_tree(self.origin.clone(), 10)?;
-		/*
-		let mut i = 0;
-		let mut count = search_loactions.len();
-
-		while i < count {
-
-			let ls = fs::read_dir(&search_loactions[i])?;
-			for file in ls {
-				let file = file?;
-
-				if file.path().is_dir() {
-					search_loactions.push( file.path().clone() );
-					count += 1;
-				} else {
-					self.files.push( file.path() );
-				}
-			}
-			i += 1;
-		}
-		*/
 		Ok(())
 	}
 
