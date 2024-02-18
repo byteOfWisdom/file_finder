@@ -3,6 +3,8 @@ use std::path::PathBuf;
 use std::io;
 
 use regex;
+use rayon::prelude::*;
+
 
 #[derive(Debug)]
 pub struct SearchState {
@@ -42,13 +44,13 @@ impl SearchState {
 
 
 	fn get_files(&mut self) -> Result<(), io::Error> {
-		let mut search_loactions : Vec<PathBuf> = vec![self.origin.clone()];
-
-		self.files = Vec::new();
-
+		//let mut search_loactions : Vec<PathBuf> = vec![self.origin.clone()];
+		self.files = get_tree(self.origin.clone(), 10)?;
+		/*
 		let mut i = 0;
+		let mut count = search_loactions.len();
 
-		while i < search_loactions.len() {
+		while i < count {
 
 			let ls = fs::read_dir(&search_loactions[i])?;
 			for file in ls {
@@ -56,13 +58,14 @@ impl SearchState {
 
 				if file.path().is_dir() {
 					search_loactions.push( file.path().clone() );
+					count += 1;
 				} else {
 					self.files.push( file.path() );
 				}
 			}
 			i += 1;
 		}
-
+		*/
 		Ok(())
 	}
 
@@ -76,15 +79,35 @@ impl SearchState {
 
 		let search_exp = regex_from_wildcards(&self.request);
 
-		self.files.iter()
+		self.results = self.files.par_iter()
 			.filter(|file| {
 				let name_string = pathbuf_to_string(&file);
 				search_exp.is_match(&name_string)
 			})
-			.for_each(|file| self.results.push( pathbuf_to_string(&file)) );
+			.map(|file| pathbuf_to_string(&file)).collect();
 
 		Ok(())
 	}
+}
+
+
+fn get_tree(path : PathBuf, depth : usize) -> Result<Vec<PathBuf>, io::Error> {
+	if depth == 0 {return Ok(Vec::new());}
+
+	let mut res : Vec<PathBuf> = Vec::new();
+	for file in fs::read_dir(path)? {
+		let file_path = file?.path();
+		if file_path.is_dir() {
+			let mut sub_dirs = match get_tree(file_path, depth - 1){
+				Ok(result) => result,
+				Err(_) => Vec::new(),
+			};
+			res.append(&mut sub_dirs);
+		} else {
+			res.push(file_path);
+		}
+	}
+	return Ok(res);
 }
 
 
